@@ -1,0 +1,8 @@
+type Storage = {
+  todos: Todo[];
+}
+
+type Todo = {
+  title: string;
+  completed: boolean;
+}
