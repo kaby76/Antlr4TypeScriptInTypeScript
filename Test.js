@@ -12,6 +12,8 @@ import TypeScriptLexer from './TypeScriptLexer.js';
 import TypeScriptParser from './TypeScriptParser.js';
 import { StringBuilder } from 'typescript-string-operations';
 import { Timer } from 'timer-node';
+import { ParseTreeWalker } from 'antlr4';
+import MyListener from './MyListener';
 function getChar() {
     let buffer = Buffer.alloc(1);
     var xx = 0;
@@ -162,7 +164,7 @@ function DoParse(str, input_name, row_number) {
             if (token.type === Token.EOF)
                 break;
         }
-        //        lexer.reset();
+        lexer.reset();
     }
     if (show_trace) {
         //       parser._interp.trace_atn_sim = true;
@@ -188,6 +190,8 @@ function DoParse(str, input_name, row_number) {
             console.error(tree.toStringTree(parser.ruleNames, parser));
         }
     }
+    const walker = new MyListener();
+    ParseTreeWalker.DEFAULT.walk(walker, tree);
     if (!quiet) {
         console.error(prefix + 'TypeScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t);
     }
